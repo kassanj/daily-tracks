@@ -20,9 +20,11 @@ tracksController.getTracks = (req, res, next) => {
 
   const { spotify } = res.locals;
 
-  spotify.getPlaylist('1Mw7lF4WaEWWgAgziZXKSF')
+  spotify.getPlaylistTracks('1Mw7lF4WaEWWgAgziZXKSF')
   .then(data => {
-    res.locals.tracks = data.body.tracks;
+    res.locals.tracks = data.body.items.sort((a,b) => {
+      return new Date(b.added_at) - new Date(a.added_at);
+    })
     next();
   })
   .catch(err => {
@@ -30,7 +32,6 @@ tracksController.getTracks = (req, res, next) => {
   });
 
 };
-
 
 
 module.exports = tracksController;

@@ -11,10 +11,14 @@ app.post('/api/tracks', tracksController.setApiToken, tracksController.getTracks
   res.status(200).json(res.locals.tracks);
 });
 
+// spotifyApi.removeFromMySavedTracks(["3VNWq8rTnQG6fM1eldSpZ0"])
+// spotifyApi.addToMySavedTracks(["3VNWq8rTnQG6fM1eldSpZ0"])
+
+// play / pause song
+// set up sdk player
+
 
 // app.use('/dist', express.static(path.join(__dirname, '../dist')));
-
-// serve index.html on the route '/'
 // app.get('/', (req, res) => {
 //   res.sendFile(path.join(__dirname, '../index.html'));
 // });

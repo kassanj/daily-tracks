@@ -3,30 +3,8 @@ import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { authEndpoint, clientId, redirectUri, scopes } from "./config";
 import hash from "./hash";
 import Player from "./Player";
-import List from "./List";
+import TrackList from "./TrackList";
 const axios = require('axios');
-
-function Index() {
-  return <div>
-          <h2>Plant Feed</h2>
-          <p>Filters</p>
-         </div>;
-}
-
-function Favorites() {
-  return <div>
-          <h2>Favorites</h2>
-          <p>Here is a list of my favorites</p>
-         </div>;
-}
-
-function Users() {
-  return <div>
-          <h2>Users</h2>
-          <p>List of users and their favorites.</p>
-          <p>Current plants they own.</p>
-         </div>;
-}
 
 class App extends Component {
 
@@ -56,8 +34,7 @@ class App extends Component {
       token: access_token
     })
     .then(response => {
-      console.log(response.data.items);
-      const tracks = response.data.items;
+      const tracks = response.data;
       this.setState({
         tracks: tracks
       })
@@ -81,7 +58,7 @@ class App extends Component {
         )}
        {this.state.token && (
          <div>
-           <List
+           <TrackList
               tracks={this.state.tracks}
             />
           </div>
