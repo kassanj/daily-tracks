@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import { connect } from 'react-redux';
 import "./Player.css";
 import { authEndpoint, clientId, redirectUri, scopes } from "../utils/config";
+import * as actions from '../actions/actions';
+
 
 const mapStateToProps = store => ({
    token: store.user.token,
@@ -9,6 +11,14 @@ const mapStateToProps = store => ({
    songName: store.trackList.currentSong,
    coverArt: store.trackList.currentCoverArt,
    trackUri: store.trackList.currentTrackUri,
+   isPlaying: store.trackList.isPlaying,
+});
+
+
+const mapDispatchToProps = dispatch => ({
+  updatePlayStatus: (status) => {
+    dispatch(actions.updatePlayStatus(status))
+  },
 });
 
 class Player extends Component {
@@ -18,24 +28,21 @@ class Player extends Component {
 
     this.state = {
       error: "",
-      playing: false,
       position: 0,
       duration: 1,
+      deviceId: '',
     };
-
-    // this.playerCheckInterval = null;
   }
 
   componentDidMount() {
     window.onSpotifyWebPlaybackSDKReady = () => {
       window.Spotify = Spotify;
       this.checkForPlayer();
-      // this.playerCheckInterval = setInterval(() => this.checkForPlayer(), 1000);
     };
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.props.trackUri) {
+  componentDidUpdate(prevProps) {
+    if (prevProps.trackUri !== this.props.trackUri) {
       this.changeCurrentlyPlaying(this.props.trackUri);
     }
   }
@@ -52,7 +59,11 @@ class Player extends Component {
     this.player.on('playback_error', e => { console.error(e, ' Playback Error'); });
 
     // Playback status updates
-    this.player.on('player_state_changed', state => console.log(state) );
+    this.player.on('player_state_changed', ({ paused }) => {
+      if (!paused !== this.props.isPlaying ) {
+        this.props.updatePlayStatus(!paused);
+      }
+    });
 
     // Ready
     this.player.on('ready', ({ device_id }) => {
@@ -115,22 +126,19 @@ class Player extends Component {
       },
       body: JSON.stringify({
         "device_ids": [ deviceId ],
-        "uris": [ trackUri]
+        "uris": [ trackUri ]
       }),
     })
-    .then(response => {
-      console.log(response);
-    });
   }
 
-  onPlayClick() {
+  onPlayClick(status) {
+    this.props.updatePlayStatus(!status);
     this.player.togglePlay();
   }
 
   render() {
 
-    const {token, artistName, songName, coverArt} = this.props
-    const {playing} = this.state
+    const { token, artistName, songName, coverArt, isPlaying } = this.props;
 
     return (
       <div className="audio-player">
@@ -142,7 +150,7 @@ class Player extends Component {
            )}
            <p>{artistName}</p>
            <p>{songName}</p>
-           <button onClick={() => this.onPlayClick()}>{playing ? "Pause" : "Play"}</button>
+           <button onClick={() => this.onPlayClick(isPlaying)}>{isPlaying ? "Pause" : "Play"}</button>
          </div>
        )}
       </div>
@@ -150,4 +158,4 @@ class Player extends Component {
   }
 }
 
-export default connect(mapStateToProps)(Player)
+export default connect(mapStateToProps, mapDispatchToProps)(Player)
