@@ -1,4 +1,4 @@
-import { SET_NEW_TOKEN, SET_USER_INFO } from '../actions/actions'
+import { SET_NEW_TOKEN, SET_USER_INFO, UPDATE_FAVORITES } from '../actions/actions'
 
 const initialState = {
   token: null,
@@ -18,26 +18,15 @@ const userReducer = (state=initialState, action) => {
     case SET_USER_INFO :
     return {
       ...state,
-      displayName: action.payload.display_name,
-      profileImg: action.payload.images[0].url
+      displayName: action.payload.user.display_name,
+      profileImg: action.payload.user.images[0].url,
+      favorites: action.payload.favorites,
     }
-    // case SET_FAVORITES :
-    // /// push into new array
-    // return {
-    //   ...state
-    // }
-    // case ADD_FAVORITE :
-    // /// push into new array
-    // return {
-    //   ...state,
-    //   favorites: action.payload
-    // }
-    // case REMOVE_FAVORITE :
-    // /// push into new array
-    // return {
-    //   ...state,
-    //   favorites: action.payload
-    // }
+    case UPDATE_FAVORITES :
+    return {
+      ...state,
+      favorites: action.payload,
+    }
     default:
       return state;
   }

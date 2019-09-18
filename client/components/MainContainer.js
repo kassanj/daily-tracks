@@ -25,9 +25,9 @@ const mapDispatchToProps = dispatch => ({
   setCurrentUserInfo: (userInfo) => {
     dispatch(actions.setUserInfo(userInfo))
   },
-  setUserFavorites: (favorites) => {
-    dispatch(actions.setUserFavorites(favorites))
-  }
+  // setUserFavorites: (favorites) => {
+  //   dispatch(actions.setUserFavorites(favorites))
+  // }
 });
 
 
@@ -82,7 +82,7 @@ class MainContainer extends Component {
     })
     .then(response => {
       const favorites = response.data;
-      this.props.setUserFavorites(favorites);
+      // this.props.setUserFavorites(favorites);
     }).catch(error => {
       console.log(error, '- setUserFavorites');
     })

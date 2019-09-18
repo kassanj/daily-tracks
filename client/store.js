@@ -11,11 +11,11 @@ const store = createStore(
   composeWithDevTools()
 );
 
-// store.subscribe(() => {
-//   saveState({
-//     trackList: store.getState().trackList,
-//     user: store.getState().user
-//   });
-// });
+store.subscribe(() => {
+  saveState({
+    trackList: store.getState().trackList,
+    user: store.getState().user
+  });
+});
 
 export default store;

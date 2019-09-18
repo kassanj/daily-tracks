@@ -35,10 +35,10 @@ class Player extends Component {
   }
 
   componentDidMount() {
-    window.onSpotifyWebPlaybackSDKReady = () => {
-      window.Spotify = Spotify;
-      this.checkForPlayer();
-    };
+    // window.onSpotifyWebPlaybackSDKReady = () => {
+    //   window.Spotify = Spotify;
+    //   this.checkForPlayer();
+    // };
   }
 
   componentDidUpdate(prevProps) {
@@ -138,7 +138,7 @@ class Player extends Component {
 
   render() {
 
-    const { token, artistName, songName, coverArt, isPlaying } = this.props;
+    const { token, artistName, songName, coverArt, isPlaying, trackUri } = this.props;
 
     return (
       <div className="audio-player">
@@ -151,6 +151,19 @@ class Player extends Component {
            <p>{artistName}</p>
            <p>{songName}</p>
            <button onClick={() => this.onPlayClick(isPlaying)}>{isPlaying ? "Pause" : "Play"}</button>
+
+           <span
+              style={{
+                display: 'inline-block',
+                width: 10,
+                cursor: 'pointer',
+                color: false ? 'red' : 'grey',
+              }}
+              onClick={() => this.toggleFavorite(trackUri)}
+            >
+            <i className="fas fa-heart"></i>
+          </span>
+
          </div>
        )}
       </div>

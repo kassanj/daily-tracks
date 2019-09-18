@@ -2,6 +2,18 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+
+const mongoURI = 'mongodb+srv://kassandram022:apple123@cluster0-diz79.mongodb.net/test?retryWrites=true&w=majority';
+mongoose.connect(mongoURI, { useNewUrlParser: true });
+mongoose.set('useFindAndModify', false);
+
+let db = mongoose.connection;
+
+db.once('open', () => console.log('connected to the database'));
+// checks if connection with the database is successful
+db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+
 const tracksController = require('./controllers/tracksController');
 const usersController = require('./controllers/usersController');
 
@@ -13,19 +25,17 @@ app.post('/api/tracks', tracksController.setApiToken, tracksController.getTracks
   res.status(200).json(res.locals.tracks);
 });
 
-app.post('/api/user', usersController.setApiToken, usersController.getUserInfoFromSpotify, (req, res) => {
-  res.status(200).json(res.locals.user);
+app.post('/api/user', usersController.setApiToken, usersController.getUserInfoFromSpotify, usersController.setUserInfoFromDatabase, (req, res) => {
+  res.status(200).json(res.locals);
 });
 
-// app.post('/api/favorites', usersController.getUser, usersController.getFavorites, (req, res) => {
-//   res.status(200).json(res.locals.favorites);
-// });
+app.post('/api/favs/remove', usersController.setApiToken, usersController.removeFavoriteFromSpotify, usersController.removeFavFromDatabase, (req, res) => {
+  res.status(200).json(res.locals.favorites);  // update redux favorites
+});
 
-// spotifyApi.removeFromMySavedTracks(["3VNWq8rTnQG6fM1eldSpZ0"])
-// spotifyApi.addToMySavedTracks(["3VNWq8rTnQG6fM1eldSpZ0"])
-
-// play / pause song
-// set up sdk player
+app.post('/api/favs/add', usersController.setApiToken, usersController.addFavoriteToSpotify, usersController.addFavToDatabase, (req, res) => {
+  res.status(200).json(res.locals.favorites);
+});
 
 
 // catch-all route handler for any requests to an unknown route
