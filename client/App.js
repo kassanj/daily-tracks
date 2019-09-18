@@ -5,16 +5,28 @@ import hash from "./hash";
 import Player from "./Player";
 import TrackList from "./TrackList";
 const axios = require('axios');
+import { connect } from 'react-redux';
+import * as actions from './actions/actions';
+
+
+const mapStateToProps = store => ({
+   token: store.user.token,
+   tracks: store.trackList.tracks
+});
+
+const mapDispatchToProps = dispatch => ({
+  setNewToken: (newToken) => {
+    dispatch(actions.setNewToken(newToken))
+  },
+  setTrackList: (tracks) => {
+    dispatch(actions.setTrackList(tracks))
+  }
+});
 
 class App extends Component {
 
   constructor(props) {
     super(props);
-
-    this.state = {
-      token: null,
-      tracks: [],
-    };
 
     this.getAllTracks = this.getAllTracks.bind(this);
   }
@@ -22,9 +34,7 @@ class App extends Component {
   componentDidMount() {
     let access_token = hash.access_token;
     if (access_token) {
-      this.setState({
-        token: access_token
-      });
+      this.props.setNewToken(access_token);
       this.getAllTracks(access_token);
     }
   }
@@ -35,18 +45,19 @@ class App extends Component {
     })
     .then(response => {
       const tracks = response.data;
-      this.setState({
-        tracks: tracks
-      })
+      this.props.setTrackList(tracks);
     }).catch(error => {
       console.log(error, '- getAllTracks');
     })
   }
 
   render() {
+
+    const {token, tracks} = this.props
+
     return (
       <div>
-        {!this.state.token && (
+        {!token && (
         <a
           className="btn btn--loginApp-link"
           href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
@@ -56,10 +67,10 @@ class App extends Component {
           Login to Spotify
         </a>
         )}
-       {this.state.token && (
+       {token && (
          <div>
            <TrackList
-              tracks={this.state.tracks}
+              tracks={tracks}
             />
           </div>
        )}
@@ -68,4 +79,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default connect(mapStateToProps, mapDispatchToProps)(App)

@@ -10,8 +10,8 @@ class Track extends Component {
 
   handleClick(e, trackId) {
     e.preventDefault();
-    console.log(this.state.token)
-    console.log(trackId, 'clicked')
+    // console.log(this.state.token)
+    // console.log(trackId, 'clicked')
   }
 
   render() {
