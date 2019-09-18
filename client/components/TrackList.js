@@ -4,8 +4,6 @@ import Track from "./Track";
 const TrackList = props => {
   const tracks = []
 
-  console.log(props.tracks.entries);
-
   for (const [index, data] of props.tracks.entries()) {
     tracks.push(<Track key={index} data={data} />)
   }
