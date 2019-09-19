@@ -12,10 +12,10 @@ const store = createStore(
 );
 
 store.subscribe(() => {
-  saveState({
-    trackList: store.getState().trackList,
-    user: store.getState().user
-  });
+  // saveState({
+  //   trackList: store.getState().trackList,
+  //   user: store.getState().user
+  // });
 });
 
 export default store;

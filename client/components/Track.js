@@ -24,8 +24,9 @@ class Track extends Component {
 
   constructor(props) {
     super(props);
-
+    
     this.saveToFavorites = this.saveToFavorites.bind(this);
+    this.removeFromFavorites = this.removeFromFavorites.bind(this);
     this.listenToTrack = this.listenToTrack.bind(this);
     this.handleCheck = this.handleCheck.bind(this);
   }

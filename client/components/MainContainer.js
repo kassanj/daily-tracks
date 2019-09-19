@@ -25,9 +25,6 @@ const mapDispatchToProps = dispatch => ({
   setCurrentUserInfo: (userInfo) => {
     dispatch(actions.setUserInfo(userInfo))
   },
-  // setUserFavorites: (favorites) => {
-  //   dispatch(actions.setUserFavorites(favorites))
-  // }
 });
 
 
@@ -48,7 +45,6 @@ class MainContainer extends Component {
       this.props.setNewToken(access_token);
       this.setUserInfo(access_token);
       this.getAllTracks(access_token);
-      // this.getFavorites();
     }
   }
 
@@ -58,6 +54,7 @@ class MainContainer extends Component {
     })
     .then(response => {
       const tracks = response.data;
+      console.log(tracks);
       this.props.setTrackList(tracks);
     }).catch(error => {
       console.log(error, '- getAllTracks');

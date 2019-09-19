@@ -7,6 +7,7 @@ const initialState = {
   currentAlbum: '',
   currentCoverArt: '',
   currentTrackUri: '',
+  currentTrackId: '',
   isPlaying: false,
 };
 
@@ -26,6 +27,7 @@ const tracksReducer = (state=initialState, action) => {
       currentAlbum: action.payload.album.name,
       currentCoverArt: action.payload.album.images[0].url,
       currentTrackUri: action.payload.uri,
+      currentTrackId: action.payload.id,
       isPlaying: true,
     }
     case UPDATE_PLAY_STATUS :

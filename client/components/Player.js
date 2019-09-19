@@ -3,21 +3,28 @@ import { connect } from 'react-redux';
 import "./Player.css";
 import { authEndpoint, clientId, redirectUri, scopes } from "../utils/config";
 import * as actions from '../actions/actions';
+const axios = require('axios');
 
 
 const mapStateToProps = store => ({
    token: store.user.token,
+   username: store.user.displayName,
+   trackId: store.trackList.currentTrackId,
    artistName: store.trackList.currentArtist,
    songName: store.trackList.currentSong,
    coverArt: store.trackList.currentCoverArt,
    trackUri: store.trackList.currentTrackUri,
    isPlaying: store.trackList.isPlaying,
+   favorites: store.user.favorites,
 });
 
 
 const mapDispatchToProps = dispatch => ({
   updatePlayStatus: (status) => {
     dispatch(actions.updatePlayStatus(status))
+  },
+  updateFavorites: (favs) => {
+    dispatch(actions.updateFavorites(favs))
   },
 });
 
@@ -32,13 +39,17 @@ class Player extends Component {
       duration: 1,
       deviceId: '',
     };
+
+    this.saveToFavorites = this.saveToFavorites.bind(this);
+    this.removeFromFavorites = this.removeFromFavorites.bind(this);
+    this.handleCheck = this.handleCheck.bind(this)
   }
 
   componentDidMount() {
-    // window.onSpotifyWebPlaybackSDKReady = () => {
-    //   window.Spotify = Spotify;
-    //   this.checkForPlayer();
-    // };
+    window.onSpotifyWebPlaybackSDKReady = () => {
+      window.Spotify = Spotify;
+      this.checkForPlayer();
+    };
   }
 
   componentDidUpdate(prevProps) {
@@ -136,9 +147,48 @@ class Player extends Component {
     this.player.togglePlay();
   }
 
+  saveToFavorites(e, track) {
+    e.preventDefault();
+
+    axios.post('/api/favs/add', {
+      token: this.props.token,
+      trackId: track,
+      username: this.props.username,
+    })
+    .then(response => {
+      const favs = response.data;
+      console.log(favs, " ADDED + UPDATED");
+      this.props.updateFavorites(favs);
+    }).catch(error => {
+      console.log(error, '- saveToFavorites');
+    })
+  }
+
+  removeFromFavorites(e, track) {
+    e.preventDefault();
+
+    axios.post('/api/favs/remove', {
+      token: this.props.token,
+      trackId: track,
+      username: this.props.username,
+    })
+    .then(response => {
+      const favs = response.data;
+      console.log(favs, " REMOVED + UPDATED");
+      this.props.updateFavorites(favs);
+    }).catch(error => {
+      console.log(error, '- removeFromFavorites');
+    })
+  }
+
+  handleCheck(track) {
+    return this.props.favorites.some(item => track === item);
+  }
+
   render() {
 
-    const { token, artistName, songName, coverArt, isPlaying, trackUri } = this.props;
+    const { token, artistName, songName, coverArt, isPlaying, trackUri, trackId } = this.props;
+    const currFav = this.handleCheck(trackId);
 
     return (
       <div className="audio-player">
@@ -150,6 +200,7 @@ class Player extends Component {
            )}
            <p>{artistName}</p>
            <p>{songName}</p>
+           <p>{trackUri}</p>
            <button onClick={() => this.onPlayClick(isPlaying)}>{isPlaying ? "Pause" : "Play"}</button>
 
            <span
@@ -157,9 +208,10 @@ class Player extends Component {
                 display: 'inline-block',
                 width: 10,
                 cursor: 'pointer',
-                color: false ? 'red' : 'grey',
+                color: currFav ? 'red' : 'grey',
               }}
-              onClick={() => this.toggleFavorite(trackUri)}
+              onClick={(e) => currFav ? this.removeFromFavorites(e, trackId) : this.saveToFavorites(e, trackId) }
+
             >
             <i className="fas fa-heart"></i>
           </span>
