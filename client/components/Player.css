@@ -1,43 +1,64 @@
-.now-playing__name {
-    font-size: 1.5em;
-    margin-bottom: 0.2em;
-}
-
-.now-playing__artist {
-    margin-bottom: 1em;
-}
-
-.now-playing__status {
-    margin-bottom: 1em;
-}
-
-.now-playing__img {
-    float: left;
-    margin-right: 10px;
-    text-align: right;
-    width: 45%;
-}
-
-.now-playing__img img {
-    max-width: 80vmin;
-    width: 100%;
-}
-
-.now-playing__side {
-    margin-left: 5%;
-    width: 45%;
-}
-
 /** Progress **/
-
 .progress {
-    border: 1px solid #eee;
-    height: 6px;
-    border-radius: 3px;
-    overflow: hidden;
+  height: 6px;
+  border-radius: 3px;
+  overflow: hidden;
+  border-top: 1px solid #d8d7d7
 }
 
 .progress__bar {
-    background-color: blue;
-    height: 4px;
+  background-color: black;
+  height: 2px;
+}
+
+.fas.fa-play, .fas.fa-pause {
+  color: black;
+}
+
+#player-navigation {
+  display: flex;
+  align-items: center;
+}
+
+#player-navigation #player-controls {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2px;
+  position: relative;
+}
+
+.fa-facebook-f, .fa-twitter, .fa-instagram {
+  padding-left: 20px;
+}
+
+#audio-player ul {
+  padding: 5px 10px;
+}
+
+#audio-player span.heart-icon {
+  padding: 20px;
+}
+
+#song-info-container {
+  padding: 2px 10px;
+  margin-left: 16px;
+}
+
+#social-share {
+  padding-right: 20px;
+}
+
+.cover-art-player {
+  padding-top: 2px;
+}
+
+#song-info-container .song-name {
+  font-family: 'Playfair Display', serif;
+  font-weight: bold;
+  padding-top: 2px;
+}
+
+#song-info-container .artist-name {
+  font-size: 12px;
+  padding-top: 6px;
 }

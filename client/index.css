@@ -1,8 +1,7 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: 'Karla', sans-serif;
+  font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -12,36 +11,170 @@ code {
     monospace;
 }
 
-.App {
-  text-align: center;
+#navigation {
+  margin-top: 10px;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+#navbar {
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.logo {
+  font-family: 'Karla', serif;
+  font-size: 40px;
+}
+
+ul, .logo {
+  list-style-type: none;
+  margin: 0;
+  padding: 23px 60px;
+}
+
+ul.page-options, ul.account-details {
+  padding-top: 30px;
+}
+
+ul.page-options li {
+  padding-bottom: 3px
+}
+
+#navbar ul li img {
+  vertical-align: middle;
+  border-radius: 50%;
+}
+
+.logo {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.right {
+  float: right;
+}
+
+.right li {
+  padding-left: 10px
+}
+
+.left {
+  float: left;
+}
+
+.left li {
+  padding-right: 10px
+}
+
+#track-feed {
+  padding: 40px 200px 40px 200px;
+}
+
+ul.account-details {
+  display: flex;
+}
+
+.track-container {
+  display: flex;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+.track-container img {
+  margin: 10px 110px 85px 0px;
+  border-radius: 3px;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.track-container .track-info {
+   padding-top: 74px;
+   padding-left: 10px;
+   text-align: center;
+}
+
+.track-container .track-info-inner {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+
+.track-container .track-name {
+  font-family: 'Playfair Display', serif;
+  font-weight: bold;
+  font-size: 23px;
+}
+
+.track-container .track-date {
+  font-size: 14px;
+  color: #655d5d;
+}
+
+.play-button a, .social-share a {
+  margin-left: 7px;
+  padding-bottom: 2px;
+  color: black;
+  border-bottom: black 1px solid;
+  text-decoration: none;
+}
+
+.heart-icon {
+  margin-right: 20px;
+}
+
+#audio-player {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: white;
+}
+
+#audio-player ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 10px 20px;
+}
+
+#audio-player ul.left {
+  padding-left: 30px;
+}
+
+#audio-player ul.right {
+  padding-right: 30px;
+}
+
+.logged-out-container {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
+.logged-out-container .logo {
+  text-align: center;
+  margin-top: 60px;
+}
+
+.logged-out-container div.spotify-link {
+  text-align: center;
+  margin-top: 20px;
+  margin-left: -20px;
+}
+
+i.fa-spotify {
+  padding-right: 10px;
+}
+
+.example-enter {
+  opacity: 0.01;
+}
+
+.example-enter.example-enter-active {
+  opacity: 1;
+  transition: 300ms;
+}
+
+.example-leave {
+  opacity: 1;
+}
+
+.example-leave.example-leave-active {
+  opacity: 0.01;
+  transition: 700ms;
 }

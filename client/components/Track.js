@@ -24,7 +24,7 @@ class Track extends Component {
 
   constructor(props) {
     super(props);
-    
+
     this.saveToFavorites = this.saveToFavorites.bind(this);
     this.removeFromFavorites = this.removeFromFavorites.bind(this);
     this.listenToTrack = this.listenToTrack.bind(this);
@@ -83,23 +83,30 @@ class Track extends Component {
 
     return (
       <div className="track-container">
-       <img src={track.album.images[0].url} width='300px' height='300px'/>
-       <p>{formattedDate}</p>
-       <p>{track.name}</p>
-       <p>{track.id}</p>
-       <span
-          style={{
-            display: 'inline-block',
-            width: 10,
-            cursor: 'pointer',
-            color: currFav ? 'red' : 'grey',
-          }}
-          onClick={(e) => currFav ? this.removeFromFavorites(e, track.id) : this.saveToFavorites(e, track.id) }
-        >
-        <i className="fas fa-heart"></i>
-      </span>
+       <img src={track.album.images[0].url} width='400px'/>
+       <div className="track-info">
+         <p className="track-date">{formattedDate}</p>
+         <div className="track-info-inner">
+           <p className="track-name">{track.name}</p>
+           <p className="artist-name">{track.artists[0].name}</p>
+         </div>
 
-       <a href="#" onClick={(e) => {this.listenToTrack(e, track)}}>Play track</a>
+          <div className='play-button'>
+          <span
+             className="heart-icon"
+             style={{
+               display: 'inline-block',
+               width: 10,
+               cursor: 'pointer',
+               color: currFav ? 'red' : 'grey',
+             }}
+             onClick={(e) => currFav ? this.removeFromFavorites(e, track.id) : this.saveToFavorites(e, track.id) }
+           >
+           <i className="fas fa-heart"></i>
+           </span>
+            <a href="#" onClick={(e) => {this.listenToTrack(e, track)}}>Play song</a>
+          </div>
+        </div>
       </div>
     )
   }

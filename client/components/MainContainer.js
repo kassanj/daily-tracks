@@ -6,6 +6,8 @@ import TrackList from "./TrackList";
 const axios = require('axios');
 import { connect } from 'react-redux';
 import * as actions from '../actions/actions';
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+
 
 
 const mapStateToProps = store => ({
@@ -54,7 +56,7 @@ class MainContainer extends Component {
     })
     .then(response => {
       const tracks = response.data;
-      console.log(tracks);
+      // console.log(tracks);
       this.props.setTrackList(tracks);
     }).catch(error => {
       console.log(error, '- getAllTracks');
@@ -88,27 +90,32 @@ class MainContainer extends Component {
 
   render() {
 
-    const {token, tracks, favorites} = this.props
+    const {token, tracks, favorites, displayName} = this.props
 
     return (
-      <div className="main-container">
+      <div id="track-feed">
         {!token && (
-        <a
-          className="btn btn--loginApp-link"
-          href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
-            "%20"
-          )}&response_type=token&show_dialog=true`}
-        >
-          Login to Spotify
-        </a>
-        )}
-       {token && (
-         <div>
-           <TrackList
-              tracks={tracks} favorites={favorites}
-            />
+        <div className="logged-out-container">
+          <div className="logo">Daily /\ Tracks</div>
+          <div className="spotify-link">
+            <i class="fab fa-spotify"></i><a
+              className="login-link"
+              href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
+                "%20"
+              )}&response_type=token&show_dialog=true`}
+            >
+               Login to Spotify
+            </a>
           </div>
-       )}
+         </div>
+        )}
+        <ReactCSSTransitionGroup transitionName="example" transitionEnterTimeout={200} transitionLeaveTimeout={700}>
+         {displayName && (
+          <TrackList
+            tracks={tracks} favorites={favorites}
+          />
+         )}
+         </ReactCSSTransitionGroup>
       </div>
     );
   }

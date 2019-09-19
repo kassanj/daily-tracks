@@ -4,6 +4,8 @@ import "./Player.css";
 import { authEndpoint, clientId, redirectUri, scopes } from "../utils/config";
 import * as actions from '../actions/actions';
 const axios = require('axios');
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+
 
 
 const mapStateToProps = store => ({
@@ -65,7 +67,6 @@ class Player extends Component {
       this.setState({ position: 0 });
     }
   }
-
 
   componentWillUnmount() {
     clearInterval(this.myInterval);
@@ -154,7 +155,8 @@ class Player extends Component {
     })
   }
 
-  onPlayClick(status) {
+  onPlayClick(e, status) {
+    e.preventDefault();
     this.props.updatePlayStatus(!status);
     this.player.togglePlay();
   }
@@ -208,39 +210,57 @@ class Player extends Component {
     };
 
     return (
-      <div className="audio-player">
+      <div id="audio-player">
        {token && (
-         <div className="navigation">
-           <h1>Audio Player</h1>
+         <div id="audio-navbar">
+         <ReactCSSTransitionGroup transitionName="example" transitionEnterTimeout={100} transitionLeaveTimeout={100}>
+
            {coverArt && (
-             <div>
-                <img src={coverArt} width='300px' height='300px'/>
-                <p>{artistName}</p>
-                <p>{songName}</p>
-                <p>{trackUri}</p>
-                <p>{duration}</p>
-                <p>{position}</p>
-                <p>{(position * 1000) * 100 / duration }</p>
-                <div className="progress">
+             <div id="audio-navbar-inner">
+               <div className="progress">
                  <div
                    className="progress__bar"
                    style={progressBarStyles}
                  />
                </div>
-                <button onClick={() => this.onPlayClick(isPlaying)}>{isPlaying ? "Pause" : "Play"}</button>
-                <span
-                   style={{
-                     display: 'inline-block',
-                     width: 10,
-                     cursor: 'pointer',
-                     color: currFav ? 'red' : 'grey',
-                   }}
-                   onClick={(e) => currFav ? this.removeFromFavorites(e, trackId) : this.saveToFavorites(e, trackId) }
-                 >
-                 <i className="fas fa-heart"></i>
-               </span>
+                <ul id="player-navigation">
+                  <li>
+                   <div className="heart-container">
+                   <span
+                      className="heart-icon fa-lg"
+                      style={{
+                        display: 'inline-block',
+                        width: 10,
+                        cursor: 'pointer',
+                        color: currFav ? 'red' : 'grey',
+                      }}
+                      onClick={(e) => currFav ? this.removeFromFavorites(e, trackId) : this.saveToFavorites(e, trackId) }
+                    >
+                    <i className="fas fa-heart"></i>
+                  </span>
+                  </div>
+                  </li>
+                  <li className="cover-art-player">
+                    <img src={coverArt} width='50px'/>
+                  </li>
+                  <li id="song-info-container">
+                    <div className="song-info song-name">{songName}</div>
+                    <div className="song-info artist-name">{artistName}</div>
+                  </li>
+                  <li id="player-controls">
+                    <a href="#" onClick={(e) => this.onPlayClick(e, isPlaying)}>{isPlaying ? <i className="fas fa-pause fa-lg"></i> : <i className="fas fa-play fa-lg"></i>}</a>
+                  </li>
+                  <li id="social-share" className="social-share">
+                    <a href="#">Share on social</a>
+                    <i class="fab fa-facebook-f"></i>
+                    <i class="fab fa-twitter"></i>
+                    <i class="fab fa-instagram"></i>
+                  </li>
+                </ul>
              </div>
            )}
+          </ReactCSSTransitionGroup>
+
          </div>
        )}
       </div>
