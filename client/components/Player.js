@@ -28,16 +28,16 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
+
 class Player extends Component {
 
   constructor(props) {
     super(props);
 
     this.state = {
-      error: "",
-      position: 0,
-      duration: 1,
-      deviceId: '',
+        duration: 0,
+        position: 0,
+        deviceId: '',
     };
 
     this.saveToFavorites = this.saveToFavorites.bind(this);
@@ -49,31 +49,43 @@ class Player extends Component {
     window.onSpotifyWebPlaybackSDKReady = () => {
       window.Spotify = Spotify;
       this.checkForPlayer();
+      this.setState({
+        position: setInterval(() => {
+          if (this.props.isPlaying) {
+            this.myInterval = this.setState({ position: this.state.position += 1 })
+          }
+        }, 1000)
+      })
     };
   }
 
   componentDidUpdate(prevProps) {
     if (prevProps.trackUri !== this.props.trackUri) {
       this.changeCurrentlyPlaying(this.props.trackUri);
+      this.setState({ position: 0 });
     }
   }
 
+
+  componentWillUnmount() {
+    clearInterval(this.myInterval);
+  }
+
   createEventHandlers() {
-
     this.player.on('initialization_error', e => { console.error(e, ' Init Error'); });
-
-    this.player.on('authentication_error', e => {
-      this.setState({ loggedIn: false });
-    });
-
+    this.player.on('authentication_error', e => { console.error(e, ' Auth Error'); });
     this.player.on('account_error', e => { console.error(e, ' Account Error'); });
     this.player.on('playback_error', e => { console.error(e, ' Playback Error'); });
 
     // Playback status updates
-    this.player.on('player_state_changed', ({ paused }) => {
+    this.player.on('player_state_changed', ({ duration, paused }) => {
       if (!paused !== this.props.isPlaying ) {
         this.props.updatePlayStatus(!paused);
       }
+      if (!paused) {
+        this.setState({ duration: duration });
+      }
+
     });
 
     // Ready
@@ -187,8 +199,13 @@ class Player extends Component {
 
   render() {
 
+    const { duration, position } = this.state;
     const { token, artistName, songName, coverArt, isPlaying, trackUri, trackId } = this.props;
     const currFav = this.handleCheck(trackId);
+
+    const progressBarStyles = {
+      width: ((position * 1000) * 100 / duration) + '%'
+    };
 
     return (
       <div className="audio-player">
@@ -196,26 +213,34 @@ class Player extends Component {
          <div className="navigation">
            <h1>Audio Player</h1>
            {coverArt && (
-             <img src={coverArt} width='300px' height='300px'/>
+             <div>
+                <img src={coverArt} width='300px' height='300px'/>
+                <p>{artistName}</p>
+                <p>{songName}</p>
+                <p>{trackUri}</p>
+                <p>{duration}</p>
+                <p>{position}</p>
+                <p>{(position * 1000) * 100 / duration }</p>
+                <div className="progress">
+                 <div
+                   className="progress__bar"
+                   style={progressBarStyles}
+                 />
+               </div>
+                <button onClick={() => this.onPlayClick(isPlaying)}>{isPlaying ? "Pause" : "Play"}</button>
+                <span
+                   style={{
+                     display: 'inline-block',
+                     width: 10,
+                     cursor: 'pointer',
+                     color: currFav ? 'red' : 'grey',
+                   }}
+                   onClick={(e) => currFav ? this.removeFromFavorites(e, trackId) : this.saveToFavorites(e, trackId) }
+                 >
+                 <i className="fas fa-heart"></i>
+               </span>
+             </div>
            )}
-           <p>{artistName}</p>
-           <p>{songName}</p>
-           <p>{trackUri}</p>
-           <button onClick={() => this.onPlayClick(isPlaying)}>{isPlaying ? "Pause" : "Play"}</button>
-
-           <span
-              style={{
-                display: 'inline-block',
-                width: 10,
-                cursor: 'pointer',
-                color: currFav ? 'red' : 'grey',
-              }}
-              onClick={(e) => currFav ? this.removeFromFavorites(e, trackId) : this.saveToFavorites(e, trackId) }
-
-            >
-            <i className="fas fa-heart"></i>
-          </span>
-
          </div>
        )}
       </div>
