@@ -7,7 +7,6 @@ const axios = require('axios');
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 
-
 const mapStateToProps = store => ({
    token: store.user.token,
    username: store.user.displayName,

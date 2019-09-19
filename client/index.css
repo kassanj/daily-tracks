@@ -81,7 +81,7 @@ ul.account-details {
 }
 
 .track-container img {
-  margin: 10px 110px 85px 0px;
+  margin: 10px 97px 85px 0px;
   border-radius: 3px;
 }
 
@@ -89,6 +89,7 @@ ul.account-details {
    padding-top: 74px;
    padding-left: 10px;
    text-align: center;
+   width: 200px;
 }
 
 .track-container .track-info-inner {
