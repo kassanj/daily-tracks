@@ -9,7 +9,9 @@ const persistedState = loadState();
 const store = createStore(
   reducers,
   persistedState,
-  composeWithDevTools(applyMiddleware(thunk))
+  composeWithDevTools(
+    applyMiddleware(thunk),
+  )
 );
 
 store.subscribe(() => {

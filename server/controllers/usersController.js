@@ -7,7 +7,7 @@ const usersController = {};
 usersController.setApiToken = (req, res, next) => {
   const spotifyApi = new SpotifyWebApi({
     clientId: 'ed1772750e46412fb4cbc82dc12748f7',
-    clientSecret: '8c8a7dc1eb6045febb34290bed411a7a',
+    clientSecret: '12bf5745ba8e432b8b00a06934f388eb',
   });
 
   spotifyApi.setAccessToken(req.body.token);
@@ -48,7 +48,7 @@ usersController.addFavoriteToSpotify = (req, res, next) => {
 
   spotify.addToMySavedTracks([req.body.trackId])
   .then(data => {
-    console.log('Added track!');
+    console.log('Added track to Spotify!');
     next();
   })
   .catch(err => {
@@ -62,7 +62,7 @@ usersController.removeFavoriteFromSpotify = (req, res, next) => {
 
   spotify.removeFromMySavedTracks([req.body.trackId])
   .then(data => {
-    console.log('Removed track!');
+    console.log('Removed track from Spotify!');
     next();
   })
   .catch(err => {
@@ -75,6 +75,7 @@ usersController.addFavToDatabase = (req, res, next) => {
   const { username, trackId } = req.body;
 
   User.findOne({ username: username }, function (err, user) {
+
     if (err) return res.json({ success: false, error: err });
     else if (user) {
       // Find the delete uid in the favorites array
@@ -83,10 +84,14 @@ usersController.addFavToDatabase = (req, res, next) => {
       if (uid === -1) {
         // Remove it from the array.
         user.favorites.push(trackId);
+        console.log(trackId)
+
         // Save the user object
         user.save(error => {
+          // already exists
           if (error) return res.json({ success: false, error: error });
           else {
+            console.log(user.favorites)
             res.locals.favorites = user.favorites;
             next();
           }
@@ -115,6 +120,7 @@ usersController.removeFavFromDatabase = (req, res, next) => {
         user.save(error => {
           if (error) return res.json({ success: false, error: error })
           else {
+
             res.locals.favorites = user.favorites;
             next();
           }

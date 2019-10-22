@@ -1,34 +1,10 @@
 import React, { Component } from "react";
-import { connect } from 'react-redux';
+import { connect, useSelector } from 'react-redux';
 import "./Player.css";
 import { authEndpoint, clientId, redirectUri, scopes } from "../utils/config";
 import * as actions from '../actions/actions';
 const axios = require('axios');
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-
-
-const mapStateToProps = store => ({
-   token: store.user.token,
-   username: store.user.displayName,
-   trackId: store.trackList.currentTrackId,
-   artistName: store.trackList.currentArtist,
-   songName: store.trackList.currentSong,
-   coverArt: store.trackList.currentCoverArt,
-   trackUri: store.trackList.currentTrackUri,
-   isPlaying: store.trackList.isPlaying,
-   favorites: store.user.favorites,
-});
-
-
-const mapDispatchToProps = dispatch => ({
-  updatePlayStatus: (status) => {
-    dispatch(actions.updatePlayStatus(status))
-  },
-  updateFavorites: (favs) => {
-    dispatch(actions.updateFavorites(favs))
-  },
-});
-
 
 class Player extends Component {
 
@@ -39,10 +15,11 @@ class Player extends Component {
         duration: 0,
         position: 0,
         deviceId: '',
+        isFavorite: false,
     };
 
-    this.saveToFavorites = this.saveToFavorites.bind(this);
-    this.removeFromFavorites = this.removeFromFavorites.bind(this);
+    this.addFavorites = this.addFavorites.bind(this);
+    this.removeFavorites = this.removeFavorites.bind(this);
     this.handleCheck = this.handleCheck.bind(this)
   }
 
@@ -109,7 +86,7 @@ class Player extends Component {
       clearInterval(this.playerCheckInterval);
 
       this.player = new window.Spotify.Player({
-        name: "Solo Project Player",
+        name: "Daily Tracks",
         getOAuthToken: cb => { cb(token); },
       });
       // Set up the player's event handlers
@@ -160,47 +137,25 @@ class Player extends Component {
     this.player.togglePlay();
   }
 
-  saveToFavorites(e, track) {
+  addFavorites(e, trackId) {
     e.preventDefault();
-
-    axios.post('/api/favs/add', {
-      token: this.props.token,
-      trackId: track,
-      username: this.props.username,
-    })
-    .then(response => {
-      const favs = response.data;
-      console.log(favs, " ADDED + UPDATED");
-      this.props.updateFavorites(favs);
-    }).catch(error => {
-      console.log(error, '- saveToFavorites');
-    })
+    const { token, username, addFavorites } = this.props;
+    addFavorites(trackId, token, username);
   }
 
-  removeFromFavorites(e, track) {
+  removeFavorites(e, trackId) {
     e.preventDefault();
-
-    axios.post('/api/favs/remove', {
-      token: this.props.token,
-      trackId: track,
-      username: this.props.username,
-    })
-    .then(response => {
-      const favs = response.data;
-      console.log(favs, " REMOVED + UPDATED");
-      this.props.updateFavorites(favs);
-    }).catch(error => {
-      console.log(error, '- removeFromFavorites');
-    })
+    const { token, username, removeFavorites } = this.props;
+    removeFavorites(trackId, token, username);
   }
 
-  handleCheck(track) {
-    return this.props.favorites.some(item => track === item);
+  handleCheck(trackId) {
+    return this.props.favorites.some(item => trackId === item);
   }
 
   render() {
 
-    const { duration, position } = this.state;
+    const { duration, position, isFavorite } = this.state;
     const { token, artistName, songName, coverArt, isPlaying, trackUri, trackId } = this.props;
     const currFav = this.handleCheck(trackId);
 
@@ -233,7 +188,7 @@ class Player extends Component {
                         cursor: 'pointer',
                         color: currFav ? 'red' : 'grey',
                       }}
-                      onClick={(e) => currFav ? this.removeFromFavorites(e, trackId) : this.saveToFavorites(e, trackId) }
+                      onClick={(e) => currFav ? this.removeFavorites(e, trackId) : this.addFavorites(e, trackId) }
                     >
                     <i className="fas fa-heart"></i>
                   </span>
@@ -251,9 +206,9 @@ class Player extends Component {
                   </li>
                   <li id="social-share" className="social-share">
                     <a href="#">Share on social</a>
-                    <i class="fab fa-facebook-f"></i>
-                    <i class="fab fa-twitter"></i>
-                    <i class="fab fa-instagram"></i>
+                    <i className="fab fa-facebook-f"></i>
+                    <i className="fab fa-twitter"></i>
+                    <i className="fab fa-instagram"></i>
                   </li>
                 </ul>
              </div>
@@ -266,5 +221,31 @@ class Player extends Component {
     );
   }
 }
+
+
+const mapStateToProps = store => ({
+   token: store.user.token,
+   username: store.user.displayName,
+   trackId: store.trackList.currentTrackId,
+   artistName: store.trackList.currentArtist,
+   songName: store.trackList.currentSong,
+   coverArt: store.trackList.currentCoverArt,
+   trackUri: store.trackList.currentTrackUri,
+   isPlaying: store.trackList.isPlaying,
+   favorites: store.user.favorites,
+});
+
+
+const mapDispatchToProps = dispatch => ({
+  updatePlayStatus: (status) => {
+    dispatch(actions.updatePlayStatus(status))
+  },
+  addFavorites: (trackId, token, username) => {
+    dispatch(actions.addFavorites(trackId, token, username))
+  },
+  removeFavorites: (trackId, token, username) => {
+    dispatch(actions.removeFavorites(trackId, token, username))
+  },
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Player)
