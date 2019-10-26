@@ -11,6 +11,13 @@ class Nav extends Component {
 
   constructor(props) {
     super(props);
+
+    this.logout = this.logout.bind(this);
+  }
+
+  logout() {
+    localStorage.clear();
+    window.location.href = '/';
   }
 
   render() {
@@ -33,6 +40,7 @@ class Nav extends Component {
            <ul className="right account-details">
              <li><img src={profileImg} width="20px"/></li>
              <li>{displayName}</li>
+             <li onClick={this.logout}>Sign Out</li>
            </ul>
          </div>
        )}
