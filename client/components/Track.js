@@ -14,8 +14,11 @@ const mapDispatchToProps = dispatch => ({
   setCurrentTrack: (track) => {
     dispatch(actions.setCurrentTrack(track))
   },
-  updateFavorites: (favs) => {
-    dispatch(actions.updateFavorites(favs))
+  addFavorites: (trackId, token, username) => {
+    dispatch(actions.addFavorites(trackId, token, username))
+  },
+  removeFavorites: (trackId, token, username) => {
+    dispatch(actions.removeFavorites(trackId, token, username))
   },
 });
 
@@ -25,44 +28,26 @@ class Track extends Component {
   constructor(props) {
     super(props);
 
-    this.saveToFavorites = this.saveToFavorites.bind(this);
-    this.removeFromFavorites = this.removeFromFavorites.bind(this);
+    this.state = {
+      isFavorite: false
+    }
+
+    this.addFavorites = this.addFavorites.bind(this);
+    this.removeFavorites = this.removeFavorites.bind(this);
     this.listenToTrack = this.listenToTrack.bind(this);
     this.handleCheck = this.handleCheck.bind(this);
   }
 
-  saveToFavorites(e, track) {
+  addFavorites(e, track) {
     e.preventDefault();
-
-    axios.post('/api/favs/add', {
-      token: this.props.token,
-      trackId: track,
-      username: this.props.username,
-    })
-    .then(response => {
-      const favs = response.data;
-      console.log(favs, " ADDED + UPDATED");
-      this.props.updateFavorites(favs);
-    }).catch(error => {
-      console.log(error, '- saveToFavorites');
-    })
+    const { token, username, addFavorites } = this.props;
+    addFavorites(track, token, username);
   }
 
-  removeFromFavorites(e, track) {
+  removeFavorites(e, track) {
     e.preventDefault();
-
-    axios.post('/api/favs/remove', {
-      token: this.props.token,
-      trackId: track,
-      username: this.props.username,
-    })
-    .then(response => {
-      const favs = response.data;
-      console.log(favs, " REMOVED + UPDATED");
-      this.props.updateFavorites(favs);
-    }).catch(error => {
-      console.log(error, '- removeFromFavorites');
-    })
+    const { token, username, removeFavorites } = this.props;
+    removeFavorites(track, token, username);
   }
 
   listenToTrack(e, track) {
@@ -72,11 +57,12 @@ class Track extends Component {
 
   handleCheck(track) {
     return this.props.favorites.some(item => track.id === item);
-  }
+  };
 
   render() {
 
     const { track, added_at, favorites } = this.props.data;
+    const { isFavorite } = this.state;
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
     const formattedDate = new Date(added_at).toLocaleDateString('en-US', options);
     const currFav = this.handleCheck(track);
@@ -100,7 +86,7 @@ class Track extends Component {
                cursor: 'pointer',
                color: currFav ? 'red' : 'grey',
              }}
-             onClick={(e) => currFav ? this.removeFromFavorites(e, track.id) : this.saveToFavorites(e, track.id) }
+             onClick={(e) => currFav ? this.removeFavorites(e, track.id) : this.addFavorites(e, track.id) }
            >
            <i className="fas fa-heart"></i>
            </span>

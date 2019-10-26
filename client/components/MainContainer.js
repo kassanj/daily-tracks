@@ -56,11 +56,11 @@ class MainContainer extends Component {
   // ATTN: REVIEW!!!!
   getFavorites() {
     axios.post('/api/favorites', {
-      // name: this.props.displayName;
+      name: this.props.displayName
     })
     .then(response => {
       const favorites = response.data;
-      // this.props.setUserFavorites(favorites);
+      this.props.setUserFavorites(favorites);
     }).catch(error => {
       console.log(error, '- setUserFavorites');
     })
@@ -77,7 +77,7 @@ class MainContainer extends Component {
         <div className="logged-out-container">
           <div className="logo">Daily /\ Tracks</div>
           <div className="spotify-link">
-            <i class="fab fa-spotify"></i><a
+            <i className="fab fa-spotify"></i><a
               className="login-link"
               href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scopes.join(
                 "%20"

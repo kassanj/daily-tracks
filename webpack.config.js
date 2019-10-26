@@ -1,6 +1,9 @@
 /* eslint-disable no-unused-vars */
 const webpack = require('webpack');
 const path = require('path');
+require("babel-polyfill");
+
+
 
 module.exports = {
   mode: 'development',
