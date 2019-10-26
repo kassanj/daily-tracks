@@ -3,9 +3,6 @@
 ### Summary
 
 
-### Summary
-
-
 ### How to get started
 
 
