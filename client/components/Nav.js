@@ -1,10 +1,8 @@
-import React, { Component } from "react";
+import  React, { Component } from "react";
 import { connect } from 'react-redux';
-import { authEndpoint, clientId, redirectUri, scopes } from "../utils/config";
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 
 const mapStateToProps = store => ({
-   token: store.user.token,
    displayName: store.user.displayName,
    profileImg: store.user.profileImg
 });
@@ -17,7 +15,7 @@ class Nav extends Component {
 
   render() {
 
-    const {displayName, profileImg, token} = this.props
+    const { displayName, profileImg } = this.props
 
     return (
 

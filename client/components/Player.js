@@ -1,10 +1,9 @@
 import React, { Component } from "react";
 import { connect, useSelector } from 'react-redux';
 import "./Player.css";
-import { authEndpoint, clientId, redirectUri, scopes } from "../utils/config";
 import * as actions from '../actions/actions';
-const axios = require('axios');
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
+
 
 class Player extends Component {
 
