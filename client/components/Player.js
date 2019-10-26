@@ -1,11 +1,9 @@
-import React, { Component } from "react";
+import  React, { Component } from "react";
 import { connect } from 'react-redux';
 import "./Player.css";
-import { authEndpoint, clientId, redirectUri, scopes } from "../utils/config";
 import * as actions from '../actions/actions';
-const axios = require('axios');
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-
+const axios = require('axios');
 
 const mapStateToProps = store => ({
    token: store.user.token,
@@ -201,7 +199,7 @@ class Player extends Component {
   render() {
 
     const { duration, position } = this.state;
-    const { token, artistName, songName, coverArt, isPlaying, trackUri, trackId } = this.props;
+    const { token, artistName, songName, coverArt, isPlaying, trackId } = this.props;
     const currFav = this.handleCheck(trackId);
 
     const progressBarStyles = {

@@ -1,33 +1,11 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import { authEndpoint, clientId, redirectUri, scopes } from "../utils/config";
 import hash from "../utils/hash";
-import TrackList from "./TrackList";
-const axios = require('axios');
 import { connect } from 'react-redux';
 import * as actions from '../actions/actions';
+import TrackList from "./TrackList";
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
-
-
-
-const mapStateToProps = store => ({
-   displayName: store.user.displayName,
-   token: store.user.token,
-   tracks: store.trackList.tracks,
-   favorites: store.user.favorites
-});
-
-const mapDispatchToProps = dispatch => ({
-  setNewToken: (newToken) => {
-    dispatch(actions.setNewToken(newToken))
-  },
-  setTrackList: (tracks) => {
-    dispatch(actions.setTrackList(tracks))
-  },
-  setCurrentUserInfo: (userInfo) => {
-    dispatch(actions.setUserInfo(userInfo))
-  },
-});
+const axios = require('axios');
 
 
 class MainContainer extends Component {
@@ -75,6 +53,7 @@ class MainContainer extends Component {
     })
   }
 
+  // ATTN: REVIEW!!!!
   getFavorites() {
     axios.post('/api/favorites', {
       // name: this.props.displayName;
@@ -120,5 +99,24 @@ class MainContainer extends Component {
     );
   }
 }
+
+const mapStateToProps = store => ({
+   displayName: store.user.displayName,
+   token: store.user.token,
+   tracks: store.trackList.tracks,
+   favorites: store.user.favorites
+});
+
+const mapDispatchToProps = dispatch => ({
+  setNewToken: (newToken) => {
+    dispatch(actions.setNewToken(newToken))
+  },
+  setTrackList: (tracks) => {
+    dispatch(actions.setTrackList(tracks))
+  },
+  setCurrentUserInfo: (userInfo) => {
+    dispatch(actions.setUserInfo(userInfo))
+  },
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainContainer)
