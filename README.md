@@ -14,13 +14,30 @@ To run the application, run the following in your command line.
 
 `npm run dev`
 
+### Credentials
+
+To personalize and use this app, there are a couple of authorization keys that are needed.
+Create a new file `.env` and fill out the following alias with your generated keys.
+
+```
+CLIENT_SECRET=
+DB_USERNAME=
+DB_PASSWORD=
+PLAYLIST_ID=
+```
+
+To generate a `CLIENT_SECRET` key, you must go to Spotify and register an application. 
+For `DB_USERNAME` and `DB_PASSWORD`, register at MongoDB and build a new database. 
+And finally, `PLAYLIST_ID` comes from the playlist you plan to save a new track to everyday. 
+
+
 ### Built With
 
 - React
 - Redux
 - Node/Express
 - OAuth2
-- Postgresql
+- MongoDB
 
 ### Authors
 
