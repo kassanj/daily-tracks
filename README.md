@@ -14,6 +14,8 @@ To run the application, run the following in your command line.
 
 `npm run dev`
 
+
+
 ### Credentials
 
 To personalize and use this app, there are a couple of authorization keys that are needed.
